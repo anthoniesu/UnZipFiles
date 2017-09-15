@@ -25,7 +25,7 @@ def decryptRarZipFile(rootdir, filename):
         elif filename.endswith('.rar'):
             fp = rarfile.RarFile(filename)
     except:
-        return
+        return False
 
     #the destination path of zipfile
     desPath = filename[:-4]
@@ -33,7 +33,7 @@ def decryptRarZipFile(rootdir, filename):
         os.mkdir(desPath)
 
     if fp.namelist in zip_name_list:
-        return
+        return False
 
     zip_name_list.append(fp.namelist)
     print ("unzip " + filename)
@@ -42,7 +42,7 @@ def decryptRarZipFile(rootdir, filename):
         fp.extractall(desPath)
         fp.close()
         print('No password')
-        return
+        return True
     #use dictionary to unzip.
     except:
         try:
@@ -65,13 +65,16 @@ def decryptRarZipFile(rootdir, filename):
                         os.rename(desPath+'\\'+file, desPath+'\\'+file.encode('cp437').decode('gbk'))
                     print('Success! ====>'+check_pwd)
                     fp.close()
+                    return True
                     break
                 elif filename.endswith('.rar'):
                     fp.extractall(path=desPath, pwd=check_pwd)
                     print('Success! ====>'+check_pwd)
                     fp.close()
+                    return True
                     break
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
 download_folder = "K:\\下載\\"
@@ -89,12 +92,16 @@ if __name__ == '__main__':
     get_public_pwd ()
     
     for root, dirs, files in os.walk(download_folder):
+        unzipped = False
         for file in files:
             filename = os.path.join(root, file)
             if os.path.isfile(filename) and filename.endswith(('.zip', '.rar')):
-                decryptRarZipFile(root, filename)
+                ret = decryptRarZipFile(root, filename)
+                if (ret == True):
+                    unzipped = ret
         for file in files:
             filename = os.path.join(root, file)
-            print("del " + filename + " ...")
             if os.path.isfile(filename) and filename.endswith(('.zip', '.rar')):
-                os.remove(filename)
+                if unzipped == True:
+                    print("del " + filename + " ...")
+                    os.remove(filename)
