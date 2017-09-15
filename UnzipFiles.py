@@ -93,10 +93,8 @@ if __name__ == '__main__':
             filename = os.path.join(root, file)
             if os.path.isfile(filename) and filename.endswith(('.zip', '.rar')):
                 decryptRarZipFile(root, filename)
-
-    for root, dirs, files in os.walk(download_folder):
         for file in files:
             filename = os.path.join(root, file)
+            print("del " + filename + " ...")
             if os.path.isfile(filename) and filename.endswith(('.zip', '.rar')):
                 os.remove(filename)
-      
