@@ -1,4 +1,5 @@
-import os
+
+2;import os
 import sys
 import zipfile
 
@@ -111,7 +112,7 @@ if __name__ == '__main__':
         for file in files:
             filename = os.path.join(root, file)
             if filename[:-7] == unzipName[:-7]:
-                break
+                continue
             if os.path.isfile(filename) and filename.endswith(('.zip', '.rar')):
                 ret, unzipName = decryptRarZipFile(root, filename)
                 if (ret == True):
